@@ -1,4 +1,4 @@
-# Longitudinal Care Analytics (Personal Project)
+# Longitudinal Care Analytics
 
 ## About
 
