@@ -1,0 +1,32 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Longitudinal Care Analytics (synthetic demo)</title>
+<style>body{font-family:system-ui,sans-serif;max-width:900px;margin:20px auto;padding:0 16px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:6px;text-align:left}input{margin:4px;padding:6px}.warn{background:#fff3cd;padding:10px;border:1px solid #e6c200}</style>
+</head><body>
+<h1>Longitudinal Care Analytics</h1>
+<p class="warn"><b>Synthetic data only. Not a medical device, not a diagnosis, not a clinical decision tool.</b> No real patients, no EHR data. Personal project, not affiliated with Counterpart Health or Clover Health.</p>
+<h2>Model metrics</h2><pre id="metrics">loading…</pre>
+<h2>Risk check</h2>
+<p>Enter values, get a synthetic risk score.</p>
+<label>Age <input id="age" type="number" value="62"></label>
+<label>BMI <input id="bmi" type="number" value="31"></label>
+<label>Systolic BP <input id="systolic_bp" type="number" value="145"></label>
+<label>HbA1c <input id="hba1c" type="number" step="0.1" value="7.2"></label>
+<label>LDL <input id="ldl" type="number" value="150"></label>
+<label>Smoker (0/1) <input id="smoker" type="number" value="1"></label>
+<label>Family history (0/1) <input id="family_history" type="number" value="1"></label>
+<label>Visits last year <input id="visits_last_year" type="number" value="2"></label>
+<button onclick="predict()">Score risk</button>
+<pre id="pred"></pre>
+<h2>Highest risk synthetic patients</h2>
+<table><thead><tr><th>Patient</th><th>Age</th><th>HbA1c</th><th>BP</th><th>Risk</th><th>Care gaps</th></tr></thead><tbody id="rows"></tbody></table>
+<h2>Bring your own data</h2>
+<p>Upload a CSV with age, bmi, systolic_bp, hba1c, ldl, smoker, family_history, visits_last_year, and optionally label, to retrain on your data or get predictions. Nothing is stored permanently.</p>
+<input type="file" id="csv"><button onclick="upload()">Upload</button><pre id="up"></pre>
+<script>
+async function j(u,o){const r=await fetch(u,o);return r.json()}
+j('/api/metrics').then(d=>document.getElementById('metrics').textContent=JSON.stringify(d,null,2));
+j('/api/patients?limit=20').then(rows=>{document.getElementById('rows').innerHTML=rows.map(r=>`<tr><td>${r.patient_id}</td><td>${r.age}</td><td>${r.hba1c}</td><td>${r.systolic_bp}</td><td>${r.risk_prob}</td><td>${(r.care_gaps||[]).join('; ')}</td></tr>`).join('')});
+async function predict(){const b={};for(const f of ['age','bmi','systolic_bp','hba1c','ldl','smoker','family_history','visits_last_year'])b[f]=Number(document.getElementById(f).value);document.getElementById('pred').textContent=JSON.stringify(await j('/api/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}),null,2)}
+async function upload(){const f=document.getElementById('csv').files[0];if(!f)return;const fd=new FormData();fd.append('file',f);document.getElementById('up').textContent=JSON.stringify(await j('/api/upload',{method:'POST',body:fd}),null,2)}
+</script></body></html>

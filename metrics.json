@@ -1,0 +1,10 @@
+{
+  "n_patients": 5000,
+  "n_test": 1000,
+  "prevalence": 0.0348,
+  "roc_auc": 0.8137,
+  "accuracy": 0.688,
+  "precision": 0.0765,
+  "recall": 0.7143,
+  "f1": 0.1381
+}
