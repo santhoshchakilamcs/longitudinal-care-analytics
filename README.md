@@ -1,5 +1,12 @@
 # Longitudinal Care Analytics (Personal Project)
 
+## About
+
+FastAPI app for chronic-condition risk scoring, longitudinal patient
+tracking, and care-gap detection on synthetic data: 5,000 synthetic
+patients, balanced logistic risk model, physician dashboard, and
+bring-your-own-data upload. Synthetic only, not a medical device.
+
 A FastAPI app that demonstrates chronic-condition risk scoring,
 longitudinal patient tracking, and care-gap detection, built to
 cover the healthcare domain gap in the Counterpart Health Senior
